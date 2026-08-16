@@ -146,7 +146,7 @@
         .control-btn:active,
         .btn:active,
         .search-btn:active,
-        .scroll-top-btn:active {
+        .banana-btt-trigger:active {
             transform: scale(0.96);
         }
 
@@ -165,7 +165,7 @@
         }
 
         /* Scroll To Top Floating Button */
-        .scroll-top-btn {
+        .banana-btt-trigger {
             position: fixed;
             bottom: 1.5rem;
             right: 1.5rem;
@@ -194,7 +194,7 @@
             z-index: 99;
         }
 
-        .scroll-top-btn.show {
+        .banana-btt-trigger.show {
             opacity: 1;
             visibility: visible;
         }
@@ -529,7 +529,7 @@
                 background-color: var(--btn-bg-hover);
                 box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
             }
-            .scroll-top-btn:hover {
+            .banana-btt-trigger:hover {
                 transform: translateY(-3px);
                 box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
             }
@@ -683,7 +683,7 @@
     </div>
 
     <!-- Floating Scroll To Top Button -->
-    <button id="scroll-top-btn" class="scroll-top-btn" title="Scroll to Top" aria-label="Scroll to Top">
+    <button id="banana-btt-trigger" class="banana-btt-trigger" title="Scroll to Top" aria-label="Scroll to Top">
         <i class="ti ti-chevron-up"></i>
     </button>
 
@@ -1068,7 +1068,7 @@
         }
 
         // --- 7. SCROLL-TO-TOP LOGIC ---
-        const scrollTopBtn = document.getElementById('scroll-top-btn');
+        const scrollTopBtn = document.getElementById('banana-btt-trigger');
         const logoTitle = document.querySelector('.logo-title');
 
         logoTitle.addEventListener('click', () => {
