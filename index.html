@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banana Mods</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ffd43b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-banana-icon lucide-banana'><path d='M4 13c3.5-2 8-2 10 2a5.5 5.5 0 0 1 8 5'/><path d='M5.15 17.89c5.52-1.52 8.65-6.89 7-12C11.55 4 11.5 2 13 2c3.22 0 5 5.5 5 8 0 6.5-4.2 12-10.49 12C5.11 22 2 22 2 20c0-1.5 1.14-1.55 3.15-2.11Z'/></svg>">
+    <!-- Font Awesome, Bootstrap Icons & Tabler Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+    <style>
+        :root {
+            /* Catppuccin Latte (Light Mode) */
+            --bg: #eff1f5;
+            --card-bg: #e6e9ef;
+            --text: #4c4f69;
+            --subtext: #6c6f85;
+            --accent: #1e66f5;
+            --hover: #ccd0da;
+            --border: #bcc0cc;
+
+            /* Control Buttons (Light Mode) */
+            --btn-bg: #1e1e2e;
+            --btn-bg-hover: #4c4f69;
+            --btn-text: #ffffff;
+            --sun-color: #f59e0b;
+            --scroll-top-btn: #1e1e2e;
+        }
+
+        [data-theme="dark"] {
+            /* Catppuccin Mocha (Dark Mode) */
+            --bg: #1e1e2e;
+            --card-bg: #181825;
+            --text: #cdd6f4;
+            --subtext: #a6adc8;
+            --accent: #89b4fa;
+            --hover: #313244;
+            --border: #45475a;
+
+            /* Control Buttons (Dark Mode) */
+            --btn-bg: #cccccc;
+            --btn-bg-hover: #eeeeee;
+            --btn-text: #181825;
+            --scroll-top-btn: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Remove default focus outline retained on touch devices */
+        button:focus, a:focus, input:focus {
+            outline: none;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            transition: background-color 0.3s, color 0.3s;
+            line-height: 1.5;
+        }
+
+        /* Centered Mobile-First Layout */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 1rem 1rem 1rem;
+        }
+
+        /* Header (Updated: Sticky Header) */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+
+            margin-left: -1rem;
+            margin-right: -1rem;
+            padding: 1rem;
+
+            background-color: color-mix(in srgb, var(--bg) 50%, transparent);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid color-mix(in srgb, var(--text) 15%, transparent);
+            margin-bottom: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .logo-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: bold;
+            font-size: 1.25rem;
+            color: #ffd43b;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* --- HEADER CONTROL BUTTONS --- */
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .control-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 42px;
+            background-color: var(--btn-bg);
+            color: var(--btn-text);
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1.25rem;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s ease, background-color 0.3s ease, color 0.3s ease, box-shadow 0.2s ease;
+        }
+
+        .theme-btn {
+            width: 42px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .theme-btn i {
+            color: var(--sun-color);
+        }
+
+        .github-btn {
+            width: 50px;
+            border-radius: 12px;
+            flex-shrink: 0;
+        }
+
+        .control-btn:active,
+        .btn:active,
+        .search-btn:active,
+        .scroll-top-btn:active {
+            transform: scale(0.96);
+        }
+
+        @media (max-width: 480px) {
+            .control-btn {
+                height: 36px;
+                font-size: 1.1rem;
+            }
+            .theme-btn {
+                width: 36px;
+            }
+            .github-btn {
+                width: 44px;
+                border-radius: 10px;
+            }
+        }
+
+        /* Scroll To Top Floating Button */
+        .scroll-top-btn {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            color: var(--scroll-top-btn);
+            border: none;
+
+            background-color: color-mix(in srgb, var(--bg) 50%, transparent);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+            opacity: 0;
+            visibility: hidden;
+
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.2s ease;
+            z-index: 99;
+        }
+
+        .scroll-top-btn.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Search Bar */
+        .search-container {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-wrapper {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-wrapper i {
+            position: absolute;
+            left: 1.1rem;
+            color: var(--subtext);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 2.75rem 0.75rem 2.75rem;
+            border: 1px solid color-mix(in srgb, var(--text) 15%, transparent);
+            border-radius: 25px;
+            background: var(--card-bg);
+            color: var(--text);
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Clear Search Button */
+        .clear-search-btn {
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            padding: 0;
+            border-radius: 50%;
+            background-color: transparent;
+            color: var(--subtext);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            line-height: 1;
+            cursor: pointer;
+            box-shadow: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: color 0.2s ease, opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+            z-index: 2;
+        }
+
+        .clear-search-btn i {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .clear-search-btn.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .clear-search-btn:active {
+            transform: translateY(-50%) scale(0.92);
+        }
+
+        .search-btn {
+            padding: 0 1.25rem;
+            border-radius: 25px;
+            background-color: var(--card-bg);
+            border: 1px solid color-mix(in srgb, var(--text) 15%, transparent);
+            color: var(--text);
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Card Entrance Animation */
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(14px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        /* App Cards */
+        .card {
+            position: relative;
+            background-color: var(--card-bg);
+            border-radius: 25px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            animation: cardFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            isolation: isolate;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+        }
+        
+        .card:has(.dropdown-menu.show) {
+            z-index: 50;
+        }
+        
+        .card-header {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .app-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background-color: var(--hover);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .app-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .app-info h2 {
+            font-size: 1.25rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .package-name {
+            max-width: 100%;
+            font-size: 0.85rem;
+            color: var(--subtext);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            border-radius: 8px;
+            margin-left: -0.5rem;
+            transition: background-color 0.2s;
+        }
+
+        .package-name span {
+            white-space: normal;
+            overflow-wrap: anywhere;
+            word-break: break-all;
+        }
+
+        /* --- EXPANDABLE DESCRIPTION & PATCHES --- */
+        .app-desc-container {
+            cursor: pointer;
+            user-select: none;
+            margin: 0 -0.5rem 1.25rem;
+            padding: 0.5rem;
+            border-radius: 15px;
+            transition: background-color 0.2s ease;
+        }
+
+        .app-desc {
+            font-size: 0.95rem;
+            color: var(--text);
+        }
+
+        .patches-list {
+            display: none;
+            list-style: none;
+            margin-top: 0.75rem;
+            padding-left: 0.25rem;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .app-desc-container.expanded .patches-list {
+            display: flex;
+        }
+
+        .patches-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.9rem;
+            color: #34A853;
+            font-weight: 500;
+        }
+
+        .patches-list li i {
+            color: #34A853;
+            font-size: 1.15rem;
+            flex-shrink: 0;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 2.5rem 1rem;
+            color: var(--subtext);
+            font-size: 1.1rem;
+        }
+
+        /* Card Actions */
+        .card-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid color-mix(in srgb, var(--text) 15%, transparent);
+            border-radius: 25px;
+            background-color: var(--bg);
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        /* Dropdown Group */
+        .download-group {
+            position: relative;
+            display: flex;
+        }
+
+        .btn-latest {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+            border-right: none;
+        }
+
+        .btn-dropdown-toggle {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            padding: 0.5rem 0.75rem;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            min-width: 140px;
+            border: 1px solid color-mix(in srgb, var(--text) 15%, transparent);
+            border-radius: 15px;
+            margin-top: 0.5rem;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            
+            background-color: color-mix(in srgb, var(--bg) 70%, transparent);
+            backdrop-filter: blur(7px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .dropdown-menu.dropup {
+            top: auto;
+            bottom: 100%;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-content {
+            max-height: 165px; 
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: transparent transparent;
+        }
+
+        .dropdown-item {
+            display: block;
+            padding: 0.6rem 1rem;
+            color: var(--text);
+            text-decoration: none;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+
+        .dropdown-item:first-child {
+            color: #4285f4;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-content.is-scrolling {
+            scrollbar-color: var(--border) var(--card-bg);
+        }
+
+        .dropdown-content::-webkit-scrollbar { width: 6px; }
+        .dropdown-content::-webkit-scrollbar-track { background: transparent; }
+        .dropdown-content::-webkit-scrollbar-thumb { background: transparent; border-radius: 8px; }
+        .dropdown-content.is-scrolling::-webkit-scrollbar-track { background: var(--card-bg); }
+        .dropdown-content.is-scrolling::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+        
+        /* --- HOVER MEDIA QUERY FIX FOR TOUCH DEVICES --- */
+        @media (hover: hover) {
+            .control-btn:hover {
+                background-color: var(--btn-bg-hover);
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+            }
+            .scroll-top-btn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+            }
+            .search-input:hover {
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            }
+            .clear-search-btn:hover {
+                color: var(--text);
+            }
+            .search-btn:hover {
+                background-color: var(--hover);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            }
+            .card:hover {
+                box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+            }
+            .package-name:hover {
+                background-color: var(--hover);
+            }
+            .app-desc-container:hover {
+                background-color: var(--hover);
+            }
+            .btn:hover {
+                background-color: var(--hover);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            }
+            .dropdown-item:hover {
+                background-color: var(--hover);
+                color: var(--accent);
+            }
+            .dropdown-content.is-scrolling::-webkit-scrollbar-thumb:hover { 
+                background: var(--subtext); 
+            }
+        }
+        
+        /* --- SKELETON LOADING ANIMATION --- */
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .skeleton {
+            background: linear-gradient(
+                90deg, 
+                var(--card-bg) 25%, 
+                var(--hover) 50%, 
+                var(--card-bg) 75%
+            );
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite linear;
+            border-radius: 8px;
+        }
+
+        .skeleton-card {
+            background-color: var(--card-bg);
+            border-radius: 25px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .skeleton-header {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .skeleton-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            flex-shrink: 0;
+        }
+
+        .skeleton-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .skeleton-title {
+            height: 20px;
+            width: 50%;
+        }
+
+        .skeleton-subtext {
+            height: 14px;
+            width: 75%;
+        }
+
+        .skeleton-desc {
+            height: 14px;
+            width: 90%;
+            margin-bottom: 0.5rem;
+        }
+
+        .skeleton-desc-short {
+            height: 14px;
+            width: 60%;
+            margin-bottom: 1.25rem;
+        }
+
+        .skeleton-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .skeleton-btn {
+            height: 36px;
+            width: 100px;
+            border-radius: 25px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-banana-icon lucide-banana"><path d="M4 13c3.5-2 8-2 10 2a5.5 5.5 0 0 1 8 5"/><path d="M5.15 17.89c5.52-1.52 8.65-6.89 7-12C11.55 4 11.5 2 13 2c3.22 0 5 5.5 5 8 0 6.5-4.2 12-10.49 12C5.11 22 2 22 2 20c0-1.5 1.14-1.55 3.15-2.11Z"/></svg>
+                <span>BANANA MODS</span>
+            </div>
+            
+            <div class="header-controls">
+                <button class="control-btn theme-btn" id="theme-toggle" title="Toggle Theme" aria-label="Toggle Theme">
+                    <i class="bi bi-brightness-high-fill"></i>
+                </button>
+                <a href="https://github.com/sthasushil/bananamods" target="_blank" rel="noopener noreferrer" class="control-btn github-btn" title="GitHub" aria-label="GitHub">
+                    <i class="fa-brands fa-github"></i>
+                </a>
+            </div>
+        </header>
+
+        <!-- Search Area -->
+        <div class="search-container">
+            <div class="search-wrapper">
+                <i class="fa-solid fa-search"></i>
+                <input type="text" id="search-input" class="search-input" placeholder="Search apps...">
+                <button id="clear-search-btn" class="clear-search-btn" title="Clear search" aria-label="Clear search">
+                    <i class="ti ti-x"></i>
+                </button>
+            </div>
+            <button id="search-btn" class="search-btn">Search</button>
+        </div>
+
+        <!-- App Container -->
+        <main id="app-container"></main>
+    </div>
+
+    <!-- Floating Scroll To Top Button -->
+    <button id="scroll-top-btn" class="scroll-top-btn" title="Scroll to Top" aria-label="Scroll to Top">
+        <i class="ti ti-chevron-up"></i>
+    </button>
+
+    <script>
+        // --- 1. DATA STRUCTURE ---
+        const appsData = [
+            {
+                name: "YouTube",
+                package: "com.google.android.youtube",
+                iconUrl: "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://youtube.com&size=256",
+                description: "Discover, watch, create, and share video content while connecting with creators and the community.",
+                patches: [
+                    "YouTube Premium",
+                    "Picture in Picture",
+                    "No ads",
+                    "Background Playback"
+                ],
+                playStoreLink: "https://play.google.com/store/apps/details?id=com.google.android.youtube",
+                versions: [
+                    { ver: "v21.04.223-1.39.1 (Latest)", link: "https://1drv.ms/u/c/6c08989d72514a7d/IQQJ89brGWGKRql3yKRFMJepAdGs1yLHYaZEVZuCaEdvbAM" }
+                ]
+            },
+            {
+                name: "YouTube Music",
+                package: "com.google.android.apps.youtube.music",
+                iconUrl: "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://music.youtube.com&size=256",
+                description: "Connecting you to the world of music: <br> Get personalized recommendations, exclusive tracks, and discover trends with seamless listening across all your devices",
+                patches: [
+                    "Music Premium",
+                    "No audio or visual ads",
+                    "Background Playback"
+                ],
+                playStoreLink: "https://play.google.com/store/apps/details?id=com.google.android.apps.youtube.music",
+                versions: [
+                    { ver: "v9.15.51-1.39.1 (Latest)", link: "https://1drv.ms/u/c/6c08989d72514a7d/IQQYGrT8MEHcQpO-KxOhe7H5AbO3KUWKF_FSDW8s-UqO3ik" }
+                ]
+            },
+            {
+                name: "Instagram",
+                package: "com.instagram.android",
+                iconUrl: "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://instagram.com&size=256",
+                description: "Connect with your friends by creating and sharing photos, stories, reels & everyday moments and explore personalized content tailored to your interests.",
+                patches: [
+                    "Ad-free feed & stories",
+                    "Download Media",
+                    "Friendship status indicator",
+                    "Anonymous story viewing",
+                    "Max Resolution Images",
+                    "Unlock developer options"
+                ],
+                playStoreLink: "https://play.google.com/store/apps/details?id=com.instagram.android",
+                versions: [
+                    { ver: "v435.0.0.37.76-3.8.0 (Latest)", link: "https://1drv.ms/u/c/6c08989d72514a7d/IQSlCyB5Z3aOQY9FbrLtNWnBATgiYHfcxqe2XMHTWJV-bHc" }
+                ]
+            },
+            {
+                name: "Tiktok",
+                package: "com.zhiliaoapp.musically",
+                iconUrl: "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://tiktok.com&size=256",
+                description: "Discover videos, music and livestreams from around the world and create your own with easy-to-use tools to capture your life.",
+                patches: [
+                    "No ads",
+                    "Download Media",
+                    "Disable login requirement",
+                    "Metra Patches Menu"
+                ],
+                playStoreLink: "https://play.google.com/store/apps/details?id=com.zhiliaoapp.musically",
+                versions: [
+                    { ver: "v46.2.3-0.6.1 (Latest)", link: "https://1drv.ms/u/c/6c08989d72514a7d/IQQ4Jz2UbiEeQqtak7xqJrt7ASpfKYbpkEYVdL6nyMchU0c" }
+                ]
+            },
+            {
+                name: "Truecaller",
+                package: "com.truecaller",
+                iconUrl: "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://truecaller.com&size=256",
+                description: "Your all-in-one solution for caller ID, call screening, call recording & spam blocking.",
+                patches: [
+                    "Truecaller Premium",
+                    "Disable telemetry",
+                    "No banner ads"
+                ],
+                playStoreLink: "https://play.google.com/store/apps/details?id=com.truecaller",
+                versions: [
+                    { ver: "v26.10.6-1.19.0 (Latest)", link: "https://1drv.ms/u/c/6c08989d72514a7d/IQS7JB7vEQD5RocSasl_LoqeAbmRrZ8ScQcAxSUFDGTgBGg" }
+                ]
+            },
+            {
+                name: "Lightroom",
+                package: "com.adobe.lrmobile",
+                iconUrl: "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://lightroom.adobe.com&size=256",
+                description: "Adobe Lightroom offers powerful AI editing tools and customizable presets to help you easily enhance, retouch, and share your photos.",
+                patches: [
+                    "Unlock Premium",
+                    "Ai Blur, Generative Ai Remove features",
+                    "Bypass Login"
+                ],
+                playStoreLink: "https://play.google.com/store/apps/details?id=com.adobe.lrmobile",
+                versions: [
+                    { ver: "v11.4.5-1.40.0 (Latest)", link: "https://1drv.ms/u/c/6c08989d72514a7d/IQQZgCPLxsc3QbTSffMvbF5DAYePVbW_qvu_3Vfu5G2Xulk" }
+                ]
+            },
+            {
+                name: "CamScanner",
+                package: "com.intsig.camscanner",
+                iconUrl: "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://camscanner.com&size=256",
+                description: "Looking for an efficient scanner app? <br> CamScanner turns your mobile device into a portable scanner to quickly digitize, edit, extract text from, and share documents.",
+                patches: [
+                    "Unlock Premium",
+                    "Disable telemetry"
+                ],
+                playStoreLink: "https://play.google.com/store/apps/details?id=com.intsig.camscanner",
+                versions: [
+                    { ver: "v7.21.5.2607090000-1.17.0 (Latest)", link: "https://1drv.ms/u/c/6c08989d72514a7d/IQTwtNRRX_1KSINB6ZFatzNXARweYDwrjOPMfl413bKHgO8" }
+                ]
+            }
+        ];
+        
+        // --- SKELETON RENDERER ---
+        function renderSkeletons(count = 4) {
+            appContainer.innerHTML = '';
+            for (let i = 0; i < count; i++) {
+                const skeletonCard = `
+                    <div class="skeleton-card">
+                        <div class="skeleton-header">
+                            <div class="skeleton skeleton-icon"></div>
+                            <div class="skeleton-info">
+                                <div class="skeleton skeleton-title"></div>
+                                <div class="skeleton skeleton-subtext"></div>
+                            </div>
+                        </div>
+                        <div class="skeleton skeleton-desc"></div>
+                        <div class="skeleton skeleton-desc-short"></div>
+                        <div class="skeleton-actions">
+                            <div class="skeleton skeleton-btn"></div>
+                            <div class="skeleton skeleton-btn"></div>
+                        </div>
+                    </div>
+                `;
+                appContainer.insertAdjacentHTML('beforeend', skeletonCard);
+            }
+        }
+        
+        // --- 2. RENDER APPS ---
+        const appContainer = document.getElementById('app-container');
+
+        function renderApps(listToRender = appsData) {
+            appContainer.innerHTML = ''; 
+            
+            if (listToRender.length === 0) {
+                appContainer.innerHTML = '<div class="no-results"><i class="fa-solid fa-magnifying-glass" style="margin-right:0.5rem;"></i> No matching apps found</div>';
+                return;
+            }
+
+            listToRender.forEach((app, index) => {
+                const latestLink = app.versions[0].link;
+                
+                const dropdownHtml = app.versions.map(v => 
+                    `<a href="${v.link}" class="dropdown-item" target="_blank" rel="noopener noreferrer">${v.ver}</a>`
+                    ).join('');
+                
+                const patchesHTML = (app.patches && app.patches.length > 0)
+                    ? `<ul class="patches-list">
+                        ${app.patches.map(patch => `<li><i class="ti ti-circle-check"></i> <span>${patch}</span></li>`).join('')}
+                       </ul>`
+                    : '';
+
+                const cardHTML = `
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="app-icon">
+                                <img src="${app.iconUrl}" alt="${app.name}" style="width: 32px; height: 32px;">
+                            </div>
+                            <div class="app-info">
+                                <h2>${app.name}</h2>
+                                <div class="package-name" onclick="copyPackage('${app.package}', this)">
+                                    <i class="fa-regular fa-copy"></i>
+                                    <span>${app.package}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="app-desc-container" onclick="togglePatches(this)" title="Click to view details">
+                            <p class="app-desc">${app.description}</p>
+                            ${patchesHTML}
+                        </div>
+                        <div class="card-actions">
+                            <div class="download-group">
+                                <a href="${latestLink}" class="btn btn-latest" target="_blank" rel="noopener noreferrer">
+                                    <i class="ti ti-download"></i> Latest
+                                </a>
+                                <button class="btn btn-dropdown-toggle" onclick="toggleDropdown(${index}, event)">
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </button>
+                                <div class="dropdown-menu" id="dropdown-${index}">
+                                    <div class="dropdown-content">
+                                        ${dropdownHtml}
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="${app.playStoreLink}" class="btn" target="_blank" rel="noopener noreferrer" style="color:#4285f4;">
+                                <i class="fa-brands fa-google-play"></i> Google Play
+                            </a>
+                        </div>
+                    </div>
+                `;
+                appContainer.insertAdjacentHTML('beforeend', cardHTML);
+            });
+            
+            document.querySelectorAll('.card').forEach(card => {
+                card.addEventListener('animationend', function() {
+                    this.style.animation = 'none';
+                }, { once: true });
+            });
+        }
+
+        // --- 3. SEARCH FILTER LOGIC ---
+        const searchInput = document.getElementById('search-input');
+        const searchBtn = document.getElementById('search-btn');
+        const clearSearchBtn = document.getElementById('clear-search-btn');
+
+        searchInput.value = '';
+
+        let searchDebounceTimer = null;
+
+        function filterApps() {
+            renderSkeletons(3);
+            
+            setTimeout(() => {
+                const query = searchInput.value.trim().toLowerCase();
+                const filteredApps = appsData.filter(app => 
+                    app.name.toLowerCase().includes(query) ||
+                    app.package.toLowerCase().includes(query) ||
+                    app.description.toLowerCase().includes(query)
+                );
+                renderApps(filteredApps);
+            }, 300);
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const val = e.target.value;
+
+            if (val.length > 0) {
+                clearSearchBtn.classList.add('show');
+            } else {
+                clearSearchBtn.classList.remove('show');
+            }
+
+            clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(() => {
+                filterApps();
+            }, 500);
+        });
+
+        searchBtn.addEventListener('click', () => {
+            clearTimeout(searchDebounceTimer);
+            filterApps();
+        });
+
+        clearSearchBtn.addEventListener('click', () => {
+            clearTimeout(searchDebounceTimer);
+            searchInput.value = '';
+            clearSearchBtn.classList.remove('show');
+            filterApps();
+            searchInput.focus();
+        });
+
+        // --- 4. EXPAND PATCHES TOGGLE ---
+        function togglePatches(containerElement) {
+            containerElement.classList.toggle('expanded');
+        }
+
+        // --- 5. OTHER INTERACTIONS ---
+        function copyPackage(packageName, element) {
+            const icon = element.querySelector('i');
+
+            function showSuccess() {
+                if (!icon) return;
+                
+                const originalClass = icon.className;
+                
+                icon.className = 'ti ti-check';
+                icon.style.color = '#34a853';
+
+                setTimeout(() => {
+                    icon.className = originalClass;
+                    icon.style.color = '';
+                }, 1500);
+            }
+
+            function fallbackCopy(text) {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.top = '0';
+                textarea.style.left = '0';
+                textarea.style.opacity = '0';
+                
+                document.body.appendChild(textarea);
+                textarea.focus();
+                textarea.select();
+
+                try {
+                    if (document.execCommand('copy')) showSuccess();
+                } catch (err) {
+                    console.error('Copy failed', err);
+                }
+
+                document.body.removeChild(textarea);
+            }
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(packageName)
+                    .then(showSuccess)
+                    .catch(() => fallbackCopy(packageName));
+            } else {
+                fallbackCopy(packageName);
+            }
+        }
+
+        function toggleDropdown(index, event) {
+            event.stopPropagation();
+            const dropdown = document.getElementById(`dropdown-${index}`);
+            
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                if (menu !== dropdown) {
+                    menu.classList.remove('show', 'dropup');
+                }
+            });
+            
+            const isOpening = !dropdown.classList.contains('show');
+            dropdown.classList.toggle('show');
+
+            if (isOpening) {
+                dropdown.classList.remove('dropup');
+                
+                const rect = dropdown.getBoundingClientRect();
+                const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+
+                if (rect.bottom > viewportHeight) {
+                    dropdown.classList.add('dropup');
+                }
+            }
+        }
+
+        window.onclick = function() {
+            document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+                menu.classList.remove('show', 'dropup');
+            });
+        };
+
+        document.addEventListener('scroll', function (event) {
+            if (event.target.classList?.contains('dropdown-content')) {
+                const menu = event.target;
+                
+                menu.classList.add('is-scrolling');
+                
+                clearTimeout(menu.scrollTimeout);
+                menu.scrollTimeout = setTimeout(() => {
+                    menu.classList.remove('is-scrolling');
+                }, 800);
+            }
+        }, true);
+
+        // --- 6. THEME TOGGLE ---
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = themeToggleBtn.querySelector('i');
+        
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+
+        themeToggleBtn.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+
+        function updateThemeIcon(theme) {
+            themeIcon.className = theme === 'dark' ? 'bi bi-brightness-high-fill' : 'bi bi-moon-fill';
+        }
+
+        // --- 7. SCROLL-TO-TOP LOGIC ---
+        const scrollTopBtn = document.getElementById('scroll-top-btn');
+        const logoTitle = document.querySelector('.logo-title');
+
+        logoTitle.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 200) {
+                scrollTopBtn.classList.add('show');
+            } else {
+                scrollTopBtn.classList.remove('show');
+            }
+        });
+
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // --- 8. REMOVE STICKY FOCUS ON TOUCH DEVICES ---
+        document.addEventListener('touchend', function () {
+            if (document.activeElement && document.activeElement !== document.body && document.activeElement.tagName !== 'INPUT') {
+                document.activeElement.blur();
+            }
+        });
+
+        // Initialize App
+        renderSkeletons(4);
+        setTimeout(() => {
+            renderApps();
+        }, 150);
+    </script>
+</body>
+</html>
