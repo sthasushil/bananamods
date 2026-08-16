@@ -1079,12 +1079,13 @@
         });
 
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 200) {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+            if (scrollTop > 200) {
                 scrollTopBtn.classList.add('show');
             } else {
                 scrollTopBtn.classList.remove('show');
             }
-        });
+        }, {passive: true});
 
         scrollTopBtn.addEventListener('click', () => {
             window.scrollTo({
